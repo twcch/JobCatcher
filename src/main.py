@@ -28,6 +28,9 @@ def main():
     experience = input("請輸入工作經驗（1: 無經驗, 2: 1年以下, 3: 1-3年, 4: 3-5年, 5: 5-10年, 6: 10年以上，直接按 Enter 跳過）：")
     education = input("請輸入學歷要求（1: 不拘, 2: 高中以下, 3: 專科, 4: 大學, 5: 碩士, 6: 博士，直接按 Enter 跳過）：")
     
+    max_pages = input("請輸入要爬取的頁數（直接按 Enter 預設為 1 頁）：")
+    max_pages = int(max_pages) if max_pages else 1
+    
     # 搜尋職缺
     jobs = service.search_jobs(
         keyword=keyword,
@@ -36,7 +39,8 @@ def main():
         salary_min=salary_min,
         salary_max=salary_max,
         experience=experience,
-        education=education
+        education=education,
+        max_pages=max_pages
     )
     
     # 儲存結果

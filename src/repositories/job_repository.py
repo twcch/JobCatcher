@@ -3,6 +3,7 @@ from typing import List, Optional
 import requests
 import json
 import logging
+import time
 from src.models.job import Job
 from src.config.settings import Job104Config
 
@@ -44,13 +45,25 @@ class Job104Repository(JobRepository):
             "edu": education,
             "page": page,
             "mode": "s",
-            "order": "1"
+            "order": "1",
+            "jobsource": "2018indexpoc",
+            "ro": "0",
+            "kwop": "7",
+            "expansionType": "area,spec,com,job,wf,wktm",
+            "langFlag": "0",
+            "langStatus": "0",
+            "recommendJob": "1",
+            "hotJob": "1",
+            "pageSize": "100"  # 設定每頁顯示 100 筆
         }
 
         # 移除 None 值的參數
         params = {k: v for k, v in params.items() if v is not None and v != ""}
 
         try:
+            # 加入延遲避免請求過快
+            time.sleep(1)
+            
             response = requests.get(
                 self.config.BASE_URL,
                 params=params,
@@ -63,7 +76,15 @@ class Job104Repository(JobRepository):
                 self.logger.warning("無法取得職缺資料")
                 return []
             
-            return [Job.from_dict(job_data) for job_data in data['data']['list']]
+            jobs = [Job.from_dict(job_data) for job_data in data['data']['list']]
+            self.logger.info(f"Page {page}: Found {len(jobs)} jobs")
+            
+            # 檢查是否還有更多頁面
+            if 'totalCount' in data['data']:
+                total_count = data['data']['totalCount']
+                self.logger.info(f"Total available jobs: {total_count}")
+            
+            return jobs
             
         except requests.RequestException as e:
             self.logger.error(f"Error occurred while fetching jobs: {e}")
