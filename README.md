@@ -137,7 +137,7 @@ MIT License
 
 ## Author
 
-[Your Name]
+[Chih-Chien Hsieh](https://twcch.github.io/)
 
 ## Acknowledgments
 
