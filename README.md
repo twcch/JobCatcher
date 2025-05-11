@@ -1,4 +1,4 @@
-# 104 Job Crawler
+# JobCatcher
 
 A Python-based web crawler for Taiwan's 104 job board (104.com.tw). This project follows enterprise-level design patterns and SOLID principles, featuring modular architecture, comprehensive error handling, and logging capabilities.
 
